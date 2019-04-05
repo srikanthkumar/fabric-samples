@@ -344,6 +344,40 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', async function(req, 
 	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
 	res.send(message);
 });
+
+// query transaction on chaincode on target peer 
+app.post('/channels/:channelName/chaincodes/:chaincodeName/selector', async function(req, res) {
+	logger.debug('==================== Query ON CHAINCODE Using Selector ==================');
+	var chaincodeName = req.params.chaincodeName;
+	var channelName = req.params.channelName;
+	var fcn = req.body.fcn;
+	var args = req.body.args;
+	var peer = req.body.peer;
+	logger.debug('channelName  : ' + channelName);
+	logger.debug('chaincodeName : ' + chaincodeName);
+	logger.debug('fcn  : ' + fcn);
+	logger.debug('args  : ' + args);
+	if (!chaincodeName) {
+		res.json(getErrorMessage('\'chaincodeName\''));
+		return;
+	}
+	if (!channelName) {
+		res.json(getErrorMessage('\'channelName\''));
+		return;
+	}
+	if (!fcn) {
+		res.json(getErrorMessage('\'fcn\''));
+		return;
+	}
+	if (!args) {
+		res.json(getErrorMessage('\'args\''));
+		return;
+	}
+
+	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
+	res.send(message);
+});
+
 //  Query Get Block by BlockNumber
 app.get('/channels/:channelName/blocks/:blockId', async function(req, res) {
 	logger.debug('==================== GET BLOCK BY NUMBER ==================');
